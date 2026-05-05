@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPG Town Hall Meeting – Lagos Island, 7 May 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root {
+    --teal:        #09948f;
+    --teal-dark:   #077570;
+    --teal-deep:   #055a56;
+    --teal-light:  #0bbdb6;
+    --teal-pale:   #e4f5f4;
+    --teal-mist:   #f0fafa;
+    --white:       #ffffff;
+    --off-white:   #f8fffe;
+    --text-dark:   #0d2d2c;
+    --text-mid:    #1d5250;
+    --text-muted:  #5a8a88;
+    --border:      #b2dedd;
+    --cream:       #f2fafa;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--text-dark);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--teal-deep);
+    position: relative;
+    overflow: hidden;
+    padding: 80px 40px 70px;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(9,148,143,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 30%, rgba(5,90,86,0.5) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-border-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--teal-light), #ffffff, var(--teal-light), transparent);
+  }
+  .hero-org {
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s ease forwards;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(38px, 6vw, 72px);
+    line-height: 1.05;
+    color: var(--white);
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.25s ease forwards;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--teal-light);
+  }
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(16px, 2.5vw, 22px);
+    color: rgba(255,255,255,0.65);
+    max-width: 640px;
+    margin: 0 auto 44px;
+    line-height: 1.5;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.4s ease forwards;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.55s ease forwards;
+  }
+  .meta-pill {
+    background: rgba(9,148,143,0.2);
+    border: 1px solid rgba(11,189,182,0.4);
+    color: var(--teal-light);
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 2px;
+  }
+  .btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--teal);
+    color: var(--white);
+    font-family: 'Jost', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.7s ease forwards;
+    text-decoration: none;
+  }
+  .btn-download:hover { background: var(--teal-light); transform: translateY(-2px); }
+  .btn-download svg { flex-shrink: 0; }
+
+  /* ─── DIVIDER ─── */
+  .teal-rule {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    margin: 0;
+  }
+
+  /* ─── ABOUT BAND ─── */
+  .about-band {
+    background: var(--teal-dark);
+    padding: 56px 32px;
+  }
+  .about-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .about-inner h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 500;
+    color: var(--white);
+    line-height: 1.2;
+    grid-column: 1 / -1;
+  }
+  .about-inner h2 span { color: var(--teal-light); font-style: italic; }
+  .about-col {
+    color: rgba(255,255,255,0.75);
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .about-col strong { color: var(--teal-light); font-weight: 500; }
+  @media (max-width: 600px) {
+    .about-inner { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  /* ─── SECTION ─── */
+  section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 64px 32px;
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── AGENDA ITEMS ─── */
+  .agenda-list { display: flex; flex-direction: column; gap: 2px; }
+
+  .agenda-item {
+    background: var(--white);
+    border-left: 3px solid transparent;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 48px 1fr auto;
+    gap: 0 20px;
+    align-items: start;
+    transition: border-color 0.2s, background 0.2s;
+    cursor: default;
+  }
+  .agenda-item:hover {
+    border-left-color: var(--teal);
+    background: #f0fffe;
+  }
+  .agenda-item:nth-child(even) { background: var(--teal-mist); }
+  .agenda-item:nth-child(even):hover { background: #dff5f4; }
+
+  .item-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--border);
+    line-height: 1;
+    padding-top: 4px;
+  }
+  .agenda-item:hover .item-num { color: var(--teal); }
+
+  .item-body {}
+  .item-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--teal-deep);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .item-lead {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--teal);
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+  }
+  .item-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .item-bullets li {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .item-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--border);
+    font-size: 11px;
+  }
+  .item-time {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--teal-dark);
+    background: var(--teal-pale);
+    padding: 6px 12px;
+    white-space: nowrap;
+    margin-top: 4px;
+    text-align: center;
+    border-radius: 2px;
+  }
+
+  /* ─── SPEAKERS GRID ─── */
+  .speakers-bg { background: var(--teal-deep); padding: 64px 32px; }
+  .speakers-inner { max-width: 900px; margin: 0 auto; }
+  .speakers-inner .section-label { color: var(--teal-light); }
+  .speakers-inner .section-label::after { background: rgba(11,189,182,0.25); }
+  .speakers-inner h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 3.5vw, 40px);
+    color: var(--white);
+    margin-bottom: 40px;
+    font-weight: 500;
+  }
+  .speakers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .speaker-card {
+    border: 1px solid rgba(11,189,182,0.25);
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 2px;
+  }
+  .speaker-card .s-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .speaker-card .s-org {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(11,189,182,0.85);
+    letter-spacing: 0.3px;
+    line-height: 1.4;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--text-dark);
+    padding: 36px 40px;
+    text-align: center;
+  }
+  footer p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+  }
+  footer strong { color: var(--teal-light); font-weight: 500; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .agenda-item { grid-template-columns: 36px 1fr; }
+    .item-time { grid-column: 2; margin-left: 0; justify-self: start; margin-top: 10px; }
+    .hero { padding: 60px 24px 50px; }
+    section { padding: 48px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-border-top"></div>
+  <div class="hero-org">Coalition for Participatory Governance (CPG)</div>
+  <h1>Town Hall<br><em>Meeting Agenda</em></h1>
+  <p class="hero-subtitle">Stakeholder Engagement on Local Government Development Partnership</p>
+  <div class="hero-meta">
+    <span class="meta-pill">📅 7th May, 2026</span>
+    <span class="meta-pill">⏰ 11:00 AM</span>
+    <span class="meta-pill">📍 Lafiaji Community Hall, Obalende, Lagos Island</span>
+  </div>
+  <button class="btn-download" onclick="downloadAgenda()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    Download Agenda PDF
+  </button>
+</div>
+<div class="teal-rule"></div>
+
+<!-- ABOUT -->
+<div class="about-band">
+  <div class="about-inner">
+    <h2>Participatory Governance:<br><span>A Critical Tool for Inclusivity,</span><br>Peace &amp; Development</h2>
+    <div class="about-col">
+      <p><strong>Master of Ceremony:</strong> Dr Alexander Akhigbe<br>
+      Founder/CEO – African Cleanup Initiative &amp; Chair, Nigeria CSO Strategy Group on SDGs (Office of the SSA to the President on SDGs)</p>
+      <br>
+      <p>This Town Hall brings together civil society, government officials, legislators, traditional leaders, youth organisations, private sector actors and development partners to strengthen participatory governance at the grassroots level.</p>
+    </div>
+    <div class="about-col">
+      <p><strong>Host:</strong> Chairman, Lagos Island Local Government</p><br>
+      <p><strong>Chairman of the Occasion:</strong> Pastor Ituah Ighodalo<br>
+      President, African Leadership Group (ALG)</p><br>
+      <p>The event centres on the analysis of the Lagos Island LGA 2026 Budget, showcasing citizen-focused budget monitoring tools developed by BudgIT.</p>
+    </div>
+  </div>
+</div>
+<div class="teal-rule"></div>
+
+<!-- AGENDA -->
+<section>
+  <div class="section-label">Programme of Events</div>
+  <div class="agenda-list">
+
+    <div class="agenda-item">
+      <div class="item-num">01</div>
+      <div class="item-body">
+        <div class="item-title">Arrival &amp; Registration</div>
+        <div class="item-lead">LIC — Mr Taiwo Arowora</div>
+        <ul class="item-bullets">
+          <li>Participants sign-in and take their seats</li>
+        </ul>
+      </div>
+      <div class="item-time">15 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">02</div>
+      <div class="item-body">
+        <div class="item-title">Welcome Remarks &amp; Opening Address</div>
+        <div class="item-lead">LIC — Dr Alexander Akhigbe</div>
+        <ul class="item-bullets">
+          <li>Host: Chairman, Lagos Island Local Government</li>
+          <li>Welcome guests &amp; affirm commitment to partnership with CPG</li>
+          <li>Chairman of Occasion: Pastor Ituah Ighodalo (ALG) — Opening Remarks on Participatory Governance</li>
+        </ul>
+      </div>
+      <div class="item-time">15 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">03</div>
+      <div class="item-body">
+        <div class="item-title">Introduction of Participants</div>
+        <div class="item-lead">Dr Alexander Akhigbe</div>
+        <ul class="item-bullets">
+          <li>Periodic introductions of all participants</li>
+        </ul>
+      </div>
+      <div class="item-time">5 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">04</div>
+      <div class="item-body">
+        <div class="item-title">Presentation of CPG Initiative</div>
+        <div class="item-lead">LIC — Ms Yemisi Ransome-Kuti</div>
+        <ul class="item-bullets">
+          <li>Overview of the initiative, mission, and strategic objectives</li>
+        </ul>
+      </div>
+      <div class="item-time">10 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">05</div>
+      <div class="item-body">
+        <div class="item-title">Demonstration of Citizen-Focused Tools</div>
+        <div class="item-lead">BudgIT — Osiyemi Joshua</div>
+        <ul class="item-bullets">
+          <li>Analysis of Lagos Island Local Government 2026 Budget</li>
+          <li>Showcasing tools for budget monitoring and tracking</li>
+          <li>Highlighting benefits to the local government and citizens</li>
+        </ul>
+      </div>
+      <div class="item-time">20 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">06</div>
+      <div class="item-body">
+        <div class="item-title">Panel Discussion — Challenges &amp; Opportunities in Budget Implementation</div>
+        <div class="item-lead">Moderator — Ms Ufuoma Nnamdi-Udeh (EIE, Exec. Director)</div>
+        <ul class="item-bullets">
+          <li>Lagos Island LGA Representatives</li>
+          <li>NASS Lagos Central — Sen. Wasiu Sanni Eshinlokun</li>
+          <li>Lagos State Budget Office Commissioner — Mr Ope George</li>
+          <li>LAWMA MD/CEO — Dr Muyiwa Gbadegesin</li>
+          <li>OSDG Special Adviser SDGs — Dr Oreoluwa Finnih</li>
+          <li>Climate Change &amp; Circular Economy Adviser — Mrs Titilayo Oshodi</li>
+          <li>Lagos Ministry of Tourism, Arts &amp; Culture — Mrs Bopo Oyekan Ismail</li>
+          <li>NEST — Mr Henry Adigun | BudgIT — Osiyemi Joshua</li>
+          <li>Framing issues for group discussion</li>
+        </ul>
+      </div>
+      <div class="item-time">15 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">07</div>
+      <div class="item-body">
+        <div class="item-title">Open Discussion — Capacity Gaps &amp; Collaboration Opportunities</div>
+        <div class="item-lead">Dr Alexander Akhigbe</div>
+        <ul class="item-bullets">
+          <li>Local government officials &amp; legislature</li>
+          <li>Traditional leaders — Erelu Kuti (Yeye Abiola Dosunmu), Prince Abiola Kosoko</li>
+          <li>Civil society — CDC Lagos Island East LCDA (Alh Noibi)</li>
+          <li>Private sector — WEMA Bank (Mr William Adefeso)</li>
+          <li>Youth organisations — Youth Parliament (Ayomide Dacosta)</li>
+          <li>Stakeholders — Oguns Investment Nig. Ltd. (Alh. Waheed Usman Ogunbiyi)</li>
+          <li>Development Partner — GIZ</li>
+          <li>Identification of monitors for training on tracking tools</li>
+        </ul>
+      </div>
+      <div class="item-time">30 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">08</div>
+      <div class="item-body">
+        <div class="item-title">Introduction of Technical &amp; Development Partners</div>
+        <div class="item-lead">Dr Alexander Akhigbe</div>
+        <ul class="item-bullets">
+          <li>LSETF — Mrs Feyisayo Alayande | LBS — Prof Adi Bongo</li>
+          <li>Union Bank — Dr Emmanuel Aihevba | Netherlands Embassy — Consul General Michel Deelen</li>
+          <li>UK FCDO — Ms Oyinkan Bello | GIZ — Mr Ayomikun Olugbode</li>
+          <li>Danish Consulate | LCCI — Dr Mrs Chinyere Almona</li>
+          <li>New Nigeria Foundation — Mr Fred Nwogu | LASCOPA — Ms Azeezat Apata</li>
+        </ul>
+      </div>
+      <div class="item-time">10 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">09</div>
+      <div class="item-body">
+        <div class="item-title">Next Steps &amp; Action Points</div>
+        <div class="item-lead">Dr Alexander Akhigbe / Rapporteur Ms Remilekun Cole</div>
+        <ul class="item-bullets">
+          <li>Communiqué — Summary of key resolutions</li>
+          <li>Agreement on follow-up actions</li>
+          <li>Formation of a joint task group</li>
+        </ul>
+      </div>
+      <div class="item-time">10 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">10</div>
+      <div class="item-body">
+        <div class="item-title">Closing Remarks</div>
+        <div class="item-lead">African Leadership Group (ALG)</div>
+        <ul class="item-bullets">
+          <li>Representative of the Chairman's Office &amp; CPG Representative</li>
+        </ul>
+      </div>
+      <div class="item-time">5 MIN</div>
+    </div>
+
+    <div class="agenda-item">
+      <div class="item-num">11</div>
+      <div class="item-body">
+        <div class="item-title">Group Photo &amp; Networking</div>
+        <div class="item-lead">MC — Mr Taiwo Arowora</div>
+        <ul class="item-bullets">
+          <li>MC will moderate photo session</li>
+          <li>Networking and refreshments</li>
+        </ul>
+      </div>
+      <div class="item-time">10 MIN</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- KEY SPEAKERS -->
+<div class="speakers-bg">
+  <div class="speakers-inner">
+    <div class="section-label">Key Participants</div>
+    <h2>Panellists &amp; Discussants</h2>
+    <div class="speakers-grid">
+      <div class="speaker-card"><div class="s-name">Dr Alexander Akhigbe</div><div class="s-org">African Cleanup Initiative / CPG</div></div>
+      <div class="speaker-card"><div class="s-name">Pastor Ituah Ighodalo</div><div class="s-org">African Leadership Group</div></div>
+      <div class="speaker-card"><div class="s-name">Ms Ufuoma Nnamdi-Udeh</div><div class="s-org">EIE, Exec. Director</div></div>
+      <div class="speaker-card"><div class="s-name">Sen. Wasiu Sanni Eshinlokun</div><div class="s-org">NASS, Lagos Central</div></div>
+      <div class="speaker-card"><div class="s-name">Mr Ope George</div><div class="s-org">Lagos State Budget Office</div></div>
+      <div class="speaker-card"><div class="s-name">Dr Muyiwa Gbadegesin</div><div class="s-org">LAWMA, MD/CEO</div></div>
+      <div class="speaker-card"><div class="s-name">Dr Oreoluwa Finnih</div><div class="s-org">OSDG, Special Adviser SDGs</div></div>
+      <div class="speaker-card"><div class="s-name">Ms Yemisi Ransome-Kuti</div><div class="s-org">CPG Member, LIC</div></div>
+      <div class="speaker-card"><div class="s-name">Osiyemi Joshua</div><div class="s-org">BudgIT</div></div>
+      <div class="speaker-card"><div class="s-name">Mrs Titilayo Oshodi</div><div class="s-org">Climate Change &amp; Circular Economy</div></div>
+      <div class="speaker-card"><div class="s-name">Michel Deelen</div><div class="s-org">Netherlands Embassy, Consul General</div></div>
+      <div class="speaker-card"><div class="s-name">Ms Oyinkan Bello</div><div class="s-org">UK FCDO / UK-Nigeria Tech Hub</div></div>
+    </div>
+  </div>
+</div>
+<div class="teal-rule"></div>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Coalition for Participatory Governance (CPG)</strong> &nbsp;·&nbsp; 7th May 2026 &nbsp;·&nbsp; Lafiaji Community Hall, Obalende, Lagos Island, Nigeria</p>
+  <p style="margin-top:8px">Hosted in partnership with Lagos Island Local Government &amp; BudgIT</p>
+</footer>
+
+<script>
+function downloadAgenda() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  const W = 210, marginL = 18, marginR = 18, contentW = W - marginL - marginR;
+  let y = 0;
+
+  function checkPage(needed = 10) {
+    if (y + needed > 272) { doc.addPage(); y = 18; }
+  }
+
+  /* ── HEADER BAND ── */
+  // deep teal bg
+  doc.setFillColor(5, 90, 86);
+  doc.rect(0, 0, 210, 52, 'F');
+
+  // top accent rule — teal-light
+  doc.setFillColor(11, 189, 182);
+  doc.rect(0, 0, 210, 2.5, 'F');
+
+  // org label
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(11, 189, 182);
+  doc.text('COALITION FOR PARTICIPATORY GOVERNANCE (CPG)', W / 2, 13, { align: 'center', charSpace: 0.8 });
+
+  // title
+  doc.setFont('times', 'bold');
+  doc.setFontSize(22);
+  doc.setTextColor(255, 255, 255);
+  doc.text('TOWN HALL MEETING AGENDA', W / 2, 25, { align: 'center' });
+
+  // subtitle
+  doc.setFont('times', 'italic');
+  doc.setFontSize(9.5);
+  doc.setTextColor(200, 240, 238);
+  doc.text('Stakeholder Engagement on Local Government Development Partnership', W / 2, 33, { align: 'center' });
+
+  // meta row
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(11, 189, 182);
+  doc.text('7th May, 2026   |   11:00 AM   |   Lafiaji Community Hall, Obalende, Lagos Island, Nigeria', W / 2, 42, { align: 'center' });
+
+  // bottom accent
+  doc.setFillColor(11, 189, 182);
+  doc.rect(0, 51, 210, 1, 'F');
+
+  y = 62;
+
+  const agenda = [
+    {
+      num: '01', title: 'Arrival & Registration',
+      lead: 'LIC — Mr Taiwo Arowora', time: '15 MIN',
+      bullets: ['Participants sign-in and take their seats']
+    },
+    {
+      num: '02', title: 'Welcome Remarks & Opening Address',
+      lead: 'LIC — Dr Alexander Akhigbe', time: '15 MIN',
+      bullets: [
+        'Host: Chairman, Lagos Island Local Government',
+        'Welcome guests & affirm commitment to CPG partnership',
+        'Chairman of Occasion: Pastor Ituah Ighodalo (ALG) — Opening Remarks'
+      ]
+    },
+    {
+      num: '03', title: 'Introduction of Participants',
+      lead: 'Dr Alexander Akhigbe', time: '5 MIN',
+      bullets: ['Periodic introductions of all participants']
+    },
+    {
+      num: '04', title: 'Presentation of CPG Initiative',
+      lead: 'LIC — Ms Yemisi Ransome-Kuti', time: '10 MIN',
+      bullets: ['Overview of the initiative, mission, and strategic objectives']
+    },
+    {
+      num: '05', title: 'Demonstration of Citizen-Focused Tools',
+      lead: 'BudgIT — Osiyemi Joshua', time: '20 MIN',
+      bullets: [
+        'Analysis of Lagos Island LGA 2026 Budget',
+        'Showcasing tools for budget monitoring and tracking',
+        'Highlighting benefits to the local government and citizens'
+      ]
+    },
+    {
+      num: '06', title: 'Panel Discussion — Challenges & Opportunities in Budget Implementation',
+      lead: 'Moderator — Ms Ufuoma Nnamdi-Udeh (EIE)', time: '15 MIN',
+      bullets: [
+        'Lagos Island LGA Representatives',
+        'NASS Lagos Central — Sen. Wasiu Sanni Eshinlokun',
+        'Lagos State Budget Office Commissioner — Mr Ope George',
+        'LAWMA MD/CEO — Dr Muyiwa Gbadegesin',
+        'OSDG Special Adviser SDGs — Dr Oreoluwa Finnih',
+        'Climate Change Adviser — Mrs Titilayo Oshodi | NEST — Mr Henry Adigun',
+        'BudgIT — Osiyemi Joshua | Framing issues for group discussion'
+      ]
+    },
+    {
+      num: '07', title: 'Open Discussion — Capacity Gaps & Collaboration',
+      lead: 'Dr Alexander Akhigbe', time: '30 MIN',
+      bullets: [
+        'Local government officials & legislature',
+        'Traditional leaders — Erelu Kuti, Prince Abiola Kosoko',
+        'Civil society, Private sector (WEMA Bank), Youth Parliament',
+        'Development Partner — GIZ | Identification of tracking monitors'
+      ]
+    },
+    {
+      num: '08', title: 'Introduction of Technical & Development Partners',
+      lead: 'Dr Alexander Akhigbe', time: '10 MIN',
+      bullets: [
+        'LSETF, Lagos Business School, Union Bank',
+        'Netherlands Embassy, UK FCDO, GIZ, Danish Consulate',
+        'LCCI, New Nigeria Foundation, LASCOPA'
+      ]
+    },
+    {
+      num: '09', title: 'Next Steps & Action Points',
+      lead: 'Dr Alexander Akhigbe / Ms Remilekun Cole (Rapporteur)', time: '10 MIN',
+      bullets: [
+        'Communique — Summary of key resolutions',
+        'Agreement on follow-up actions',
+        'Formation of a joint task group'
+      ]
+    },
+    {
+      num: '10', title: 'Closing Remarks',
+      lead: 'African Leadership Group (ALG)', time: '5 MIN',
+      bullets: ["Representative of the Chairman's Office & CPG Representative"]
+    },
+    {
+      num: '11', title: 'Group Photo & Networking',
+      lead: 'MC — Mr Taiwo Arowora', time: '10 MIN',
+      bullets: ['MC moderates photo session', 'Networking and refreshments']
+    }
+  ];
+
+  agenda.forEach((item, i) => {
+    // Calculate row height: title(8) + lead(6) + bullets + padding
+    const bulletLines = item.bullets.reduce((acc, b) => {
+      return acc + doc.splitTextToSize('- ' + b, contentW - 62).length;
+    }, 0);
+    const rowH = 8 + 6 + (bulletLines * 5) + 12;
+    checkPage(rowH + 3);
+
+    // Alternating row bg
+    const bg = i % 2 === 0 ? [255, 255, 255] : [240, 250, 250];
+    doc.setFillColor(...bg);
+    doc.rect(marginL, y - 5, contentW, rowH, 'F');
+
+    // Left teal accent bar
+    doc.setFillColor(9, 148, 143);
+    doc.rect(marginL, y - 5, 3, rowH, 'F');
+
+    // Item number — large, muted teal
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(178, 222, 221);
+    doc.text(item.num, marginL + 7, y + 4);
+
+    // Title
+    doc.setFont('times', 'bold');
+    doc.setFontSize(10.5);
+    doc.setTextColor(5, 90, 86);
+    const titleLines = doc.splitTextToSize(item.title, contentW - 58);
+    doc.text(titleLines, marginL + 18, y + 1);
+
+    // Lead
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(9, 148, 143);
+    doc.text(item.lead, marginL + 18, y + 1 + (titleLines.length * 5) + 2);
+
+    // Bullets
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(90, 138, 136);
+    let bY = y + 1 + (titleLines.length * 5) + 7;
+    item.bullets.forEach((b) => {
+      const bLines = doc.splitTextToSize('- ' + b, contentW - 62);
+      doc.text(bLines, marginL + 20, bY);
+      bY += bLines.length * 5;
+    });
+
+    // Time badge — teal pale bg
+    const badgeW = 22, badgeH = 7;
+    const badgeX = marginL + contentW - badgeW;
+    doc.setFillColor(228, 245, 244);
+    doc.rect(badgeX, y - 2, badgeW, badgeH, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(6.5);
+    doc.setTextColor(7, 117, 112);
+    doc.text(item.time, badgeX + badgeW / 2, y + 3, { align: 'center' });
+
+    y += rowH + 2;
+  });
+
+  /* ── FOOTER ── */
+  const footerY = 287;
+  doc.setFillColor(5, 90, 86);
+  doc.rect(0, footerY - 2, 210, 12, 'F');
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.setTextColor(11, 189, 182);
+  doc.text(
+    'Coalition for Participatory Governance (CPG)  ·  7 May 2026  ·  Lagos Island, Nigeria',
+    W / 2, footerY + 5, { align: 'center' }
+  );
+
+  doc.save('CPG-TownHall-Agenda-7May2026.pdf');
+}
+</script>
+</body>
+</html>
